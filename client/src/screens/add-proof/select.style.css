@@ -1,0 +1,27 @@
+/* App.css */
+.select-container {
+  position: relative;
+  border: 1px solid #ccc;
+  padding: 10px;
+  cursor: pointer;
+  user-select: none;
+}
+
+.select-options {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  display: none;
+  flex-direction: column;
+  background-color: #fff;
+  border: 1px solid #ccc;
+}
+
+.select-option {
+  padding: 5px 10px;
+  cursor: pointer;
+}
+
+.select-option:hover {
+  background-color: #f0f0f0;
+}

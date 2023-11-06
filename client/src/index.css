@@ -1,0 +1,69 @@
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
+    monospace;
+}
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+
+.btn{
+      position: relative;
+    font-family: inherit;
+    line-height: initial;
+    font-weight: 700;
+    cursor: pointer;
+    transition-duration: 0.1s;
+    transition-property: background-color, color, border-color, opacity, box-shadow;
+    transition-timing-function: ease-out;
+    outline: none;
+    border: 1px solid transparent;
+    margin: 0px;
+    box-shadow: rgba(0, 0, 0, 0.1) 0px 3px 12px 0px;
+    padding-block: 6px;
+    padding-inline: 14px;
+    min-height: 40px;
+    background-color: rgb(4, 69, 175);
+    color: rgb(255, 255, 255);
+    border-radius: 4px;
+}
+
+.input{
+      display: block;
+    width: 100%;
+    font-family: inherit;
+    color: rgb(4, 69, 175);
+    padding-block-start: 0px;
+    padding-block-end: var(--spacing-100);
+    padding-inline: 0px;
+    border: none;
+    outline: none;
+    border-radius: 0px;
+    appearance: none;
+    background-image: none;
+    background-position: initial;
+    background-size: initial;
+    background-repeat: initial;
+    background-attachment: initial;
+    background-origin: initial;
+    background-clip: initial;
+    transform: translateZ(0px);
+    font-size: 30px;
+    -webkit-font-smoothing: antialiased;
+    line-height: unset;
+    -webkit-text-fill-color: rgb(180, 199, 231);
+    animation: 1ms ease 0s 1 normal none running native-autofill-in;
+    transition: background-color 1e+08s ease 0s, box-shadow 0.1s ease-out 0s;
+    box-shadow: rgba(4, 69, 175, 0.3) 0px 1px;
+    background-color: transparent !important;
+}
