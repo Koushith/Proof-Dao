@@ -2,8 +2,39 @@ import { useState, useEffect } from "react";
 import { Toaster, toast } from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
 import { Button, ChakraProvider } from '@chakra-ui/react'
-
+import './app.css'
 import { Navbar } from "./components/navbar.component";
+
+const inputStyle = {
+  display: 'block',
+  width: '100%',
+  fontFamily: 'inherit',
+  color: 'rgb(4, 69, 175)',
+  paddingBlockStart: '0px',
+  paddingBlockEnd: 'var(--spacing-100)',
+  paddingInline: '0px',
+  border: 'none',
+  outline: 'none',
+  borderRadius: '0px',
+  appearance: 'none',
+  backgroundImage: 'none',
+  backgroundPosition: 'initial',
+  backgroundSize: 'initial',
+  backgroundRepeat: 'initial',
+  backgroundAttachment: 'initial',
+  backgroundOrigin: 'initial',
+  backgroundClip: 'initial',
+  transform: 'translateZ(0px)',
+  fontSize: '30px',
+  WebkitFontSmoothing: 'antialiased',
+  lineHeight: 'unset',
+  WebkitTextFillColor: 'rgb(180, 199, 231)',
+  animation: '1ms ease 0s 1 normal none running native-autofill-in',
+  transition: 'background-color 1e+08s ease 0s, box-shadow 0.1s ease-out 0s',
+  boxShadow: 'rgba(4, 69, 175, 0.3) 0px 1px',
+  backgroundColor: 'transparent !important',
+
+};
 
 function App() {
   const apiUrl = process.env.REACT_APP_API_URL;
@@ -127,10 +158,10 @@ function App() {
                       <form onSubmit={handleSubmit}>
                         <div class="flex-grow w-full h-full block">
                           <div class="relative flex-grow w-full h-full my-2">
-                            <label for="provider" class="block mb-2 text-xl font-medium ">
+                            <label for="provider" class="block text-xl font-medium ">
                               Pick a psuodonym
                             </label>
-                            <input type="text" className="input" required placeholder="Enter the ID" onChange={handleNSIDChange} class="bg-gray-50 border border-gray-300 text-gray-900 text-xl py-3  rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full sm:h-[50px] p-2.5 " />
+                            <input type="text" style={inputStyle} className="mt-4 mb-2" required placeholder="Enter the ID" onChange={handleNSIDChange} class="bg-gray-50 border border-gray-300 text-gray-900 text-xl py-3  rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full sm:h-[50px] p-2.5 " />
                           </div>
                         </div>
                         <div class="flex-grow w-full h-full block mb-2">

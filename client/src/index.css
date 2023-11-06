@@ -39,7 +39,7 @@ code {
 }
 
 .input{
-      display: block;
+     display: block;
     width: 100%;
     font-family: inherit;
     color: rgb(4, 69, 175);
@@ -66,4 +66,5 @@ code {
     transition: background-color 1e+08s ease 0s, box-shadow 0.1s ease-out 0s;
     box-shadow: rgba(4, 69, 175, 0.3) 0px 1px;
     background-color: transparent !important;
+   
 }

@@ -1,9 +1,9 @@
 import { useParams, useNavigate } from "react-router-dom";
-import { QRCodeSVG } from "qrcode.react";
+import QRCode, { QRCodeSVG } from "qrcode.react";
 import { useState, useEffect, useRef } from "react";
 import { Toaster, toast } from "react-hot-toast";
 import Select from 'react-select';
-import { ChakraProvider } from '@chakra-ui/react'
+import { ChakraProvider, Drawer, DrawerBody, DrawerCloseButton, DrawerContent, DrawerHeader, DrawerOverlay, useDisclosure } from '@chakra-ui/react'
 import { TriangleDownIcon } from '@chakra-ui/icons'
 import {
     Card, CardHeader, CardBody, Collapse,
@@ -40,6 +40,9 @@ export const AddProof = () => {
     const intervalRef = useRef();
     const [isLoading, setIsLoading] = useState(false);
     const [hideSubmit, setHideSubmit] = useState(false);
+
+
+    const { isOpen, onOpen, onClose } = useDisclosure()
 
     const options = [
         { value: '0', label: 'Student or Alum of Top 50 Universities' },
@@ -87,6 +90,20 @@ export const AddProof = () => {
         // { value: 'zoho-email', label: 'Zoho Email' },
     ];
 
+    // Dummy data array of objects
+    const data = [
+        {
+            id: 1, text: 'Login using Gmail', logo: "https://mailmeteor.com/logos/assets/PNG/Gmail_Logo_512px.png"
+        },
+        { id: 2, text: 'Login using Outlook', logo: "https://icones.pro/wp-content/uploads/2022/04/icone-outlook-bleu.png" },
+
+    ];
+
+    const [selectedItem, setSelectedItem] = useState(null);
+
+    const handleItemClick = (item) => {
+        setSelectedItem(item.id);
+    };
 
     const postData = async () => {
         try {
@@ -212,7 +229,7 @@ export const AddProof = () => {
 
                         {/* ceneter- proof collection */}
                         <div class="w-[1/2] mx-auto max-w-lg">
-                            <form onSubmit={handleSubmit} className="">
+                            <form className="">
                                 <div class="">
                                     <label for="countries" className="block mb-2 text-xl text-black" style={{ fontWeight: 600 }}>
                                         2 - Attach Credentials to your Psuedonymous Profile
@@ -237,8 +254,13 @@ export const AddProof = () => {
                                     /> */}
                                 </div>
                                 <div className="mt-4">
-                                    <Button type="submit" className="btn mt-6" style={{ background: ' rgba(4, 69, 175, 0.8)', color: '#fff' }} hidden={hideSubmit} isLoading={isLoading} size={'lg'} variant='solid' onClick={postData} >
-                                        Connect to Credentials Wallet
+                                    <Button onClick={() => {
+
+
+                                        onOpen()
+                                        //  postData()
+                                    }} className="btn mt-6" style={{ background: ' rgba(4, 69, 175, 0.8)', color: '#fff' }} hidden={hideSubmit} isLoading={isLoading} size={'lg'} variant='solid'  >
+                                        Connect to Credentials Wallet..
                                     </Button>
                                 </div>
 
@@ -282,7 +304,64 @@ export const AddProof = () => {
 
                     </div>
                 </section >
+                {/* drawer */}
 
+                <Drawer onClose={onClose} isOpen={isOpen} size={"lg"}>
+                    <DrawerOverlay />
+                    <DrawerContent>
+                        <DrawerCloseButton />
+                        <DrawerHeader>Attach Proof (2/2)  </DrawerHeader>
+                        <DrawerBody>
+                            <div
+
+                                className={`p-2 cursor-pointer  p-4 hover:bg-gray-100  'bg-gray-100' 
+                                    `}
+
+                                style={{
+                                    borderRadius: '4px',
+                                    background: ' rgba(4, 69, 175, 0.1)',
+                                    color: 'rgb(4, 69, 175)',
+                                    boxShadow:
+
+                                        'rgba(4, 69, 175, 0.8) 0px 0px 0px 2px inset'
+
+                                }}
+                            >
+                                Select Proof
+                            </div>
+
+                            <p className="pt-4 text-base">To Create a Proof you need to login using</p>
+                            <div className="flex mt-4 gap-10 ">
+
+
+                                {data.map((item) => (
+                                    <div
+                                        className="flex items-center justify-center flex-col "
+                                        key={item.id}
+                                        onClick={() => handleItemClick(item)}
+                                        style={{
+                                            borderRadius: '4px',
+                                            padding: '20px',
+                                            border: selectedItem === item.id ? '1px solid rgba(4, 69, 175, 0.8)' : '1px solid #eee',
+                                            // padding: '8px',
+                                            margin: '4px',
+                                            cursor: 'pointer',
+                                        }}
+                                    >
+                                        <img src={item.logo} alt="logo" style={{ width: '100px', height: '100px', objectFit: 'contain' }} />
+                                        <p className="text-center mt-2 font-semibold">{item.text}</p>
+                                    </div>
+                                ))}
+
+
+                            </div>
+
+                            <div>
+                                <QRCodeSVG className="hidden md:block" height={200} width={200} value={"claimUrl"} />
+                            </div>
+                        </DrawerBody>
+                    </DrawerContent>
+                </Drawer>
             </div >
         </ChakraProvider>
     );
