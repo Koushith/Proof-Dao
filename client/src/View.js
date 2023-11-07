@@ -1,6 +1,9 @@
 import { useParams, useNavigate } from "react-router-dom";
+
 import { QRCodeSVG } from "qrcode.react";
+
 import { useState, useEffect } from "react";
+
 import { Toaster, toast } from "react-hot-toast";
 import { ChakraProvider, Grid } from '@chakra-ui/react'
 import { TriangleDownIcon } from '@chakra-ui/icons'
@@ -92,30 +95,30 @@ export const View = () => {
         <ChakraProvider>
             <div className="">
                 <Toaster />
-                <header class="text-gray-600 body-font border ">
-                    <div class="container mx-auto flex flex-wrap justify-between p-5 flex-col md:flex-row items-center">
-                        <a class="flex title-font font-medium items-center text-gray-900 mb-4 md:mb-0">
+                <header className="text-gray-600 body-font border ">
+                    <div className="container mx-auto flex flex-wrap justify-between p-5 flex-col md:flex-row items-center">
+                        <a className="flex title-font font-medium items-center text-gray-900 mb-4 md:mb-0">
                             <img
                                 src="https://assets.website-files.com/63f580596efa74629ceecdf5/646cd0d4bff811689094709c_Reclaim-Logo-Asterisk.jpg"
-                                class="w-10 h-10 rounded-full"
+                                className="w-10 h-10 rounded-full"
                             />
 
-                            <span class="ml-3 font-bold text-xl">Network State ID</span>
+                            <span className="ml-3 font-bold text-xl">Proofs DAO</span>
                         </a>
                         <a href="https://www.reclaimprotocol.org/">
-                            <button class="inline-flex cursor-pointer items-center bg-gray-100 border-0 py-1 px-3 focus:outline-none hover:bg-gray-200 rounded text-base mt-4 md:mt-0">
+                            <button className="inline-flex cursor-pointer items-center bg-gray-100 border-0 py-1 px-3 focus:outline-none hover:bg-gray-200 rounded text-base mt-4 md:mt-0">
                                 🔗 Reclaim Protocol
                             </button>
                         </a>
                     </div>
                 </header>
 
-                <section class="text-gray-600 body-font">
-                    <div class="container py-20 mx-auto text-center">
+                <section className="text-gray-600 body-font">
+                    <div className="container py-20 mx-auto text-center">
                         {isVerified === false && (
                             <>
-                                <div class="flex flex-col text-center w-full mb-12">
-                                    <h1 class="sm:text-3xl text-2xl font-medium title-font mb-4 text-gray-900">
+                                <div className="flex flex-col text-center w-full mb-12">
+                                    <h1 className="sm:text-3xl text-2xl font-medium title-font mb-4 text-gray-900">
                                         Invalid NS.ID. Please check again.
                                     </h1>
                                 </div>
@@ -123,8 +126,8 @@ export const View = () => {
                         )}
                         {isVerified === true && proofData !== null && (
                             <>
-                                <div class="flex flex-col text-center w-full mb-12">
-                                    <h1 class="sm:text-3xl text-2xl font-medium title-font mb-4 text-gray-900">
+                                <div className="flex flex-col text-center w-full mb-12">
+                                    <h1 className="sm:text-3xl text-2xl font-medium title-font mb-4 text-gray-900">
                                         Credentials of {nsid} ID
                                     </h1>
                                 </div>

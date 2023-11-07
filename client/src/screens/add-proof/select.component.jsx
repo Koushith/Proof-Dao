@@ -1,16 +1,9 @@
 import React, { useState } from 'react';
 
-const dummyOptions = [
-  { id: 1, label: 'Option 1' },
-  { id: 2, label: 'Option 2' },
-  { id: 3, label: 'Option 3' },
-  { id: 4, label: 'Option 4' },
-  { id: 5, label: 'Option 5' },
-];
 
-export const SelectProofs = ({data}) => {
-  const [selectedOptions, setSelectedOptions] = useState([]);
 
+export const SelectProofs = ({data, selectedOptions, setSelectedOptions}) => {
+ 
   const toggleOption = (option) => {
     if (selectedOptions.includes(option)) {
       setSelectedOptions(selectedOptions.filter((item) => item !== option));
@@ -22,10 +15,10 @@ export const SelectProofs = ({data}) => {
   return (
     <div className="select-container">
       <ul className="select-list space-y-2">
-        {data?.map((option) => (
+        {data?.map((option, index) => (
           <li
-            key={option.id}
-            className={`p-2 cursor-pointer  p-4 hover:bg-gray-100 ${
+            key={index}
+            className={`cursor-pointer  p-4 hover:bg-gray-100 ${
               selectedOptions.includes(option.label) ? 'bg-gray-100' : ''
             }`}
             onClick={() => toggleOption(option.label)}

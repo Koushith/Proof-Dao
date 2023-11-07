@@ -11,7 +11,7 @@ import logger from "morgan";
 import mongoose from "mongoose";
 
 import indexRouter from "./routes/index.js";
-import { run } from "./util/connect.js";
+import connectDB from "./util/connect.js";
 
 dotenv.config();
 
@@ -34,7 +34,7 @@ app.use(cookieParser());
 //   }
 // }
 
-run();
+connectDB();
 
 app.get('/api', (req,res)=>{
   res.send("This route works")

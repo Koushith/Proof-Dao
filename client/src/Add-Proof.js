@@ -1,19 +1,33 @@
 import { useParams, useNavigate } from "react-router-dom";
-import QRCode, { QRCodeSVG } from "qrcode.react";
+
 import { useState, useEffect, useRef } from "react";
+
 import { Toaster, toast } from "react-hot-toast";
-import Select from 'react-select';
-import { ChakraProvider, Drawer, DrawerBody, DrawerCloseButton, DrawerContent, DrawerHeader, DrawerOverlay, useDisclosure } from '@chakra-ui/react'
-import { TriangleDownIcon } from '@chakra-ui/icons'
-import {
-    Card, CardHeader, CardBody, Collapse,
-    VStack, Heading, Text, Box, Button, Link,
-    Stack, StackDivider, Badge, IconButton, Flex,
-    Progress
-} from '@chakra-ui/react'
-import { Navbar } from "./components";
-import './screens/add-proof/add-proof.css'
+
 import { SelectProofs } from "./screens/add-proof/select.component";
+
+
+
+import {
+    Drawer,
+    DrawerBody,
+    DrawerHeader,
+    DrawerOverlay,
+    DrawerContent,
+    DrawerCloseButton,
+    Card,
+    Alert,
+    AlertIcon,
+    AlertTitle,
+    AlertDescription,
+    useDisclosure,
+    ChakraProvider,
+    Button,
+    Progress,
+} from '@chakra-ui/react'
+
+import QRCodeSVG from 'react-qr-code'
+
 // import AppStore from './assets/AppStore.svg';
 // import PlayStore from './assets/PlayStore.svg';
 
@@ -40,7 +54,9 @@ export const AddProof = () => {
     const intervalRef = useRef();
     const [isLoading, setIsLoading] = useState(false);
     const [hideSubmit, setHideSubmit] = useState(false);
+    const [selectedOptions, setSelectedOptions] = useState([]);
 
+    const [provider, setProvider] = useState([])
 
     const { isOpen, onOpen, onClose } = useDisclosure()
 
@@ -48,68 +64,43 @@ export const AddProof = () => {
         { value: '0', label: 'Student or Alum of Top 50 Universities' },
         { value: '1', label: 'Works at Big4 consulting Firms' },
         { value: '2', label: 'Works at FAANG' },
-        { value: '3', label: 'YC Alum' },
-        // { value: 'uidai-aadhar', label: 'Aadhaar Name' },
-        // { value: 'uidai-address', label: 'Aadhaar Address' },
-        // { value: 'uidai-dob', label: 'Aadhaar DOB' },
-        // { value: 'uidai-phone', label: 'Aadhaar Phone' },
-        // { value: 'uidai-state', label: 'Aadhaar State' },
-        // { value: 'uidai-uid', label: 'Aadhaar No' },
-        // { value: 'bybit-balance', label: 'Bybit Balance' },
-        // { value: 'bybit-spot-pnl', label: 'Bybit Spot PNL' },
-        // { value: 'chess-rating', label: 'Chess Rating' },
-        // { value: 'chess-user', label: 'Chess User' },
-        // { value: 'coinswitch-balance', label: 'Coinswitch Balance' },
-        // { value: 'codeforces-rating', label: 'Codeforces Rating' },
-        // { value: 'dunzo-last-order', label: 'Dunzo Last Order' },
-        // { value: 'facebook-friends-count', label: 'Facebook Friends Count' },
-        // { value: 'flickr-user', label: 'Flickr User' },
-        // { value: 'github-commits', label: 'Github Commits' },
-        // { value: 'github-issues', label: 'Github Issues' },
-        // { value: 'github-pull-requests', label: 'Github Pull Requests' },
-        // { value: 'google-login', label: 'GMail' },
-        // { value: 'godaddy-login', label: 'GoDaddy Login' },
-        // { value: 'hackerearth-user', label: 'Hackerearth User' },
-        // { value: 'hackerrank-username', label: 'Hackerrank Username' },
-        // { value: 'instagram-user', label: 'Instagram User' },
-        // { value: 'instagram-user-week-posts', label: 'Instagram User Week Posts' },
-        // { value: 'irs-address', label: 'IRS Address' },
-        // { value: 'irs-name', label: 'IRS Name' },
-        // { value: 'letterboxd-user', label: 'Letterboxd User' },
-        // { value: 'lichess-username', label: 'Lichess Username' },
-        // { value: 'loom-user-id', label: 'Loom User ID' },
-        // { value: 'medium-followers-count', label: 'Medium Followers Count' },
-        // { value: 'notion-username', label: 'Notion Username' },
-        // { value: 'outlook-login', label: 'Outlook Mail' },
-        // { value: 'spotify-account-type', label: 'Spotify Account Type' },
-        // { value: 'spotify-email', label: 'Spotify Email' },
-        // { value: 'spotify-premium', label: 'Spotify Premium' },
-        // { value: 'swiggy-total-count', label: 'Swiggy Total Order' },
-        // { value: 'tinder-match-count', label: 'Tinder Match Count' },
-        // { value: 'wikipedia-user', label: 'Wikipedia User' },
-        // { value: 'zoho-email', label: 'Zoho Email' },
+        { value: 'yc-login', label: 'YC Alum' },
+
     ];
 
     // Dummy data array of objects
-    const data = [
+    const mailProviders = [
         {
-            id: 1, text: 'Login using Gmail', logo: "https://mailmeteor.com/logos/assets/PNG/Gmail_Logo_512px.png"
+            id: 1, text: 'Login using Gmail', logo: "https://mailmeteor.com/logos/assets/PNG/Gmail_Logo_512px.png", value:'google-login'
         },
-        { id: 2, text: 'Login using Outlook', logo: "https://icones.pro/wp-content/uploads/2022/04/icone-outlook-bleu.png" },
+        { id: 2, text: 'Login using Outlook', logo: "https://icones.pro/wp-content/uploads/2022/04/icone-outlook-bleu.png", value:'outlook-login'},
 
     ];
 
-    const [selectedItem, setSelectedItem] = useState(null);
-
-    const handleItemClick = (item) => {
-        setSelectedItem(item.id);
+    const [selectedMailProvider, setSlectedMailProvider] = useState({
+        provider:"google-login",
+        value:"google-login",
+        id:0
+    });
+const [linkGenerationReady, setLinkGenerationReady]= useState(false)
+    const handleSelecctMailProvider = (item) => {
+        setSlectedMailProvider(item);
+        setProvider([...provider, {
+            provider: item.value,
+            value: item.value
+        }])
+        
+        setLinkGenerationReady(ready=>!ready)
     };
-
+    console.log("provider---", provider)
+    console.log("linkGenerationReady", linkGenerationReady)
+    console.log("selectedMailProvider", selectedMailProvider)
+    
     const postData = async () => {
         try {
             setIsLoading(true);
-            if (selectProvider.length === 0) {
-                // toast.error("Please select atleast one credential!");
+            if (provider.length === 0) {
+                toast.error("Please select atleast one credential!");
                 setIsLoading(false);
                 return;
             }
@@ -125,12 +116,14 @@ export const AddProof = () => {
                     "Sec-Fetch-Mode": "cors",
                 },
                 body: JSON.stringify({
-                    provider: selectProvider,
+                    provider: provider,
                     nsId: nsid,
                 }),
             };
             const res = await fetch(url, options);
             const data = await res.json();
+
+            console.log("data", data)
             setCheckId(data.checkId);
             setClaimUrl(data.url);
             setIsLoading(false);
@@ -190,7 +183,7 @@ export const AddProof = () => {
         }),
     };
 
-
+    console.log("selected", selectedOptions)
     useEffect(() => {
         if (checkId) {
             intervalRef.current = setInterval(() => {
@@ -212,15 +205,15 @@ export const AddProof = () => {
                 <Toaster />
                 {/* <Navbar/> */}
 
-                <section class="text-gray-600 body-font">
-                    <div class="container px-5 py-24 mx-auto">
-                        <div class="flex flex-col text-center w-full mb-12">
-                            {/* <h1 class="sm:text-3xl text-2xl font-medium title-font mb-4 text-gray-900">
+                <section className="text-gray-600 body-font">
+                    <div className="container px-5 py-24 mx-auto">
+                        <div className="flex flex-col text-center w-full mb-12">
+                            {/* <h1 className="sm:text-3xl text-2xl font-medium title-font mb-4 text-gray-900">
                                 Verified By Default
                             </h1> */}
                             {gotValidProof === true && (
                                 <>
-                                    <p class="sm:text-2xl text-xl font-medium title-font mb-4 text-gray-900">
+                                    <p className="sm:text-2xl text-xl font-medium title-font mb-4 text-gray-900">
                                         Credentials Added to your profile!
                                     </p>
                                 </>
@@ -228,18 +221,20 @@ export const AddProof = () => {
                         </div>
 
                         {/* ceneter- proof collection */}
-                        <div class="w-[1/2] mx-auto max-w-lg">
+                        <div className="w-[1/2] mx-auto max-w-lg">
                             <form className="">
-                                <div class="">
-                                    <label for="countries" className="block mb-2 text-xl text-black" style={{ fontWeight: 600 }}>
+                                <div className="">
+                                    <label htmlFor="countries" className="block mb-2 text-xl text-black" style={{ fontWeight: 600 }}>
                                         2 - Attach Credentials to your Psuedonymous Profile
                                     </label>
 
                                     <p className="mb-2 mt-2">Choose as many as you like</p>
 
                                     <div className="mt-4">
-                                        {/* <div class="radio-list__Wrapper-sc-16rzvkh-0 buYfpT"><div aria-disabled="false" class="Root-sc-__sc-164255h-0 cnWoOa" data-qa="choice" data-qa-index="0" data-qa-selected="false" data-selectable="true"><div class="Root-sc-__sc-1iyh3rv-0 jodjEt"><div aria-hidden="true" class="KeyHelperWrapper-sc-__sc-1iyh3rv-1 jDPQrH"><div data-qa="key-hint-wrapper-A" class="HintWrapper-sc-__sc-1iyh3rv-5 cvRTpu"><div class="Hint-sc-__sc-1iyh3rv-3 cyGqRo"><span data-qa="key-hint" class="HintText-sc-__sc-1iyh3rv-4 gSClia">Key</span><span class="Letter-sc-__sc-1iyh3rv-2 lDVFL">A</span></div></div></div></div><div data-qa="choice-0-readable-element" aria-label="Instagram" class="ChoiceContent-sc-__sc-1r651ck-0 kNxYOj"><div class="TextWrapper-sc-__sc-1f8vz90-0 fDiQnR">Instagram</div></div><div class="CheckboxContent-sc-__sc-1r651ck-1 jmseRK"><span data-qa="icon-check-svg" class="Boundary-sc-__sc-184gmm6-0 eOWvGy"><svg height="13" width="16"><path d="M14.293.293l1.414 1.414L5 12.414.293 7.707l1.414-1.414L5 9.586z"></path></svg></span></div></div></div> */}
-                                        <SelectProofs data={options} />
+                                        {/* <div className="radio-list__Wrapper-sc-16rzvkh-0 buYfpT"><div aria-disabled="false" className="Root-sc-__sc-164255h-0 cnWoOa" data-qa="choice" data-qa-index="0" data-qa-selected="false" data-selectable="true"><div className="Root-sc-__sc-1iyh3rv-0 jodjEt"><div aria-hidden="true" className="KeyHelperWrapper-sc-__sc-1iyh3rv-1 jDPQrH"><div data-qa="key-hint-wrapper-A" className="HintWrapper-sc-__sc-1iyh3rv-5 cvRTpu"><div className="Hint-sc-__sc-1iyh3rv-3 cyGqRo"><span data-qa="key-hint" className="HintText-sc-__sc-1iyh3rv-4 gSClia">Key</span><span className="Letter-sc-__sc-1iyh3rv-2 lDVFL">A</span></div></div></div></div><div data-qa="choice-0-readable-element" aria-label="Instagram" className="ChoiceContent-sc-__sc-1r651ck-0 kNxYOj"><div className="TextWrapper-sc-__sc-1f8vz90-0 fDiQnR">Instagram</div></div><div className="CheckboxContent-sc-__sc-1r651ck-1 jmseRK"><span data-qa="icon-check-svg" className="Boundary-sc-__sc-184gmm6-0 eOWvGy"><svg height="13" width="16"><path d="M14.293.293l1.414 1.414L5 12.414.293 7.707l1.414-1.414L5 9.586z"></path></svg></span></div></div></div> */}
+
+
+                                        <SelectProofs data={options} selectedOptions={selectedOptions} setSelectedOptions={setSelectedOptions} />
                                     </div>
 
                                     {/* <Select
@@ -269,7 +264,7 @@ export const AddProof = () => {
                                 <>
                                     <button
                                         onClick={handleGoProfile}
-                                        class="text-white sm:h-[60px] bg-indigo-500 border-0 py-2 px-8 focus:outline-none hover:bg-indigo-600 rounded-lg text-xl"
+                                        className="text-white sm:h-[60px] bg-indigo-500 border-0 py-2 px-8 focus:outline-none hover:bg-indigo-600 rounded-lg text-xl"
                                     >
                                         Profile
                                     </button>
@@ -279,21 +274,21 @@ export const AddProof = () => {
                         </div>
 
                         {/* goes inside model */}
-                        <div class="flex lg:w-2/3 w-full sm:flex-row flex-col mx-auto px-8 justify-center  sm:space-x-4 sm:space-y-0 space-y-4 sm:px-0 items-center sm:items-end">
+                        <div className="flex lg:w-2/3 w-full sm:flex-row flex-col mx-auto px-8 justify-center  sm:space-x-4 sm:space-y-0 space-y-4 sm:px-0 items-center sm:items-end">
                             {claimUrl !== null && (
                                 <div className="flex flex-col justify-center items-center gap-4 text-center w-full mt-12">
-                                    <p class="sm:text-3xl hidden md:block text-2xl font-medium title-font mb-4 text-gray-900">
+                                    <p className="sm:text-3xl hidden md:block text-2xl font-medium title-font mb-4 text-gray-900">
                                         Scan in Reclaim App
                                     </p>
                                     <QRCodeSVG className="hidden md:block" height={200} width={200} value={claimUrl} />
                                     <div className="flex-row p-5 rounded-lg  gap-4">
                                         <div className="mb-7">
-                                            <p class="sm:text-sm text-sm font-medium title-font justify-centre mb-1 text-gray-900">
+                                            <p className="sm:text-sm text-sm font-medium title-font justify-centre mb-1 text-gray-900">
                                                 Waiting for Proof .... </p>
                                             <Progress size='xs' isIndeterminate />
                                         </div>
                                         <a target="_blank" href={claimUrl} rel="noreferrer">
-                                            <button class="text-white w-full bg-indigo-500 border-0 py-2 px-6 focus:outline-none m-2 hover:bg-indigo-600 rounded-xl text-lg">
+                                            <button className="text-white w-full bg-indigo-500 border-0 py-2 px-6 focus:outline-none m-2 hover:bg-indigo-600 rounded-xl text-lg">
                                                 Tap to Create Proof
                                             </button>
                                         </a>
@@ -312,38 +307,41 @@ export const AddProof = () => {
                         <DrawerCloseButton />
                         <DrawerHeader>Attach Proof (2/2)  </DrawerHeader>
                         <DrawerBody>
-                            <div
-
-                                className={`p-2 cursor-pointer  p-4 hover:bg-gray-100  'bg-gray-100' 
+                            <p className="pt-4 mb-4 text-black text-xl font-medium">Selected Proofs</p>
+                            {selectedOptions.map(i => (
+                                <div
+                                    key={i}
+                                    className={`mb-2 cursor-pointer  p-4 hover:bg-gray-100  'bg-gray-100' 
                                     `}
 
-                                style={{
-                                    borderRadius: '4px',
-                                    background: ' rgba(4, 69, 175, 0.1)',
-                                    color: 'rgb(4, 69, 175)',
-                                    boxShadow:
+                                    style={{
+                                        borderRadius: '4px',
+                                        background: ' rgba(4, 69, 175, 0.1)',
+                                        color: 'rgb(4, 69, 175)',
+                                        boxShadow:
 
-                                        'rgba(4, 69, 175, 0.8) 0px 0px 0px 2px inset'
+                                            'rgba(4, 69, 175, 0.8) 0px 0px 0px 2px inset'
 
-                                }}
-                            >
-                                Select Proof
-                            </div>
+                                    }}
+                                >
+                                    {i}
+                                </div>
+                            ))}
 
                             <p className="pt-4 text-base">To Create a Proof you need to login using</p>
                             <div className="flex mt-4 gap-10 ">
 
 
-                                {data.map((item) => (
+                                {mailProviders.map((item) => (
                                     <div
                                         className="flex items-center justify-center flex-col "
                                         key={item.id}
-                                        onClick={() => handleItemClick(item)}
+                                        onClick={() => handleSelecctMailProvider({id: item.id, value:item.value, provider:item.value})}
                                         style={{
                                             borderRadius: '4px',
                                             padding: '20px',
-                                            border: selectedItem === item.id ? '1px solid rgba(4, 69, 175, 0.8)' : '1px solid #eee',
-                                            // padding: '8px',
+                                            border: selectedMailProvider.id === item.id ? '1px solid rgba(4, 69, 175, 0.8)' : '1px solid #eee',
+                                           
                                             margin: '4px',
                                             cursor: 'pointer',
                                         }}
@@ -356,9 +354,77 @@ export const AddProof = () => {
 
                             </div>
 
-                            <div>
-                                <QRCodeSVG className="hidden md:block" height={200} width={200} value={"claimUrl"} />
-                            </div>
+                            {selectedOptions.includes('YC Alum') && <div>
+                                <p className="mt-6 mb-6"> And</p>
+                                <div
+                                    className="flex items-center justify-center flex-col "
+
+                                    style={{
+                                        borderRadius: '4px',
+                                        padding: '20px',
+                                        border: '1px solid rgba(4, 69, 175, 0.8)',
+                                        width: 'fit-content',
+                                        margin: '4px',
+                                        cursor: 'pointer',
+                                    }}
+                                >
+                                    <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/b/b2/Y_Combinator_logo.svg/220px-Y_Combinator_logo.svg.png" alt="logo" style={{ width: '100px', height: '100px', objectFit: 'contain' }} />
+                                    <p className="text-center mt-2 font-semibold">YC- BookFace</p>
+                                </div>
+
+                            </div>}
+                            
+                            <Button onClick={postData}>Submit</Button>
+                            {claimUrl !== null && (
+                                <Card mt={10}>
+                                    <QRCodeSVG className="hidden md:block" height={200} width={200} value={claimUrl} />
+
+                                    <Alert
+                                        status='info'
+                                        variant='subtle'
+                                        flexDirection='column'
+                                        alignItems='center'
+                                        justifyContent='center'
+                                        textAlign='center'
+                                        height='200px'
+                                    >
+                                        <AlertIcon boxSize='40px' mr={0} />
+                                        <AlertTitle mt={4} mb={1} fontSize='lg'>
+                                          Scan in Reclaim App-   Waiting for the Proof!!
+                                        </AlertTitle>
+                                        <a target="_blank" href={claimUrl}>
+                                            <button class="text-white w-full bg-indigo-500 border-0 py-2 px-6 focus:outline-none m-2 hover:bg-indigo-600 rounded-xl text-lg">
+                                                Tap to Create Proof
+                                            </button>
+                                        </a>
+                                        <AlertDescription maxWidth='sm'>
+                                            You Should have recieved the proof submission request
+                                        </AlertDescription>
+                                    </Alert>
+
+                                    {/* <Alert
+                                    status='success'
+                                    variant='subtle'
+                                    flexDirection='column'
+                                    alignItems='center'
+                                    justifyContent='center'
+                                    textAlign='center'
+                                    height='200px'
+                                >
+                                    <AlertIcon boxSize='40px' mr={0} />
+                                    <AlertTitle mt={4} mb={1} fontSize='lg'>
+                                        Application submitted!
+                                    </AlertTitle>
+                                    <AlertDescription maxWidth='sm'>
+                                        Thanks for submitting your application. Our team will get back to you soon.
+                                    </AlertDescription>
+                                </Alert> */}
+                                </Card>
+
+                            )}
+                           
+
+
                         </DrawerBody>
                     </DrawerContent>
                 </Drawer>

@@ -145,12 +145,12 @@ export const ProofView = () => {
                 <Toaster />
             <Navbar/>
 
-                <section class="text-gray-600 body-font">
-                    <div class="container py-20 mx-auto text-center">
+                <section className="text-gray-600 body-font">
+                    <div className="container py-20 mx-auto text-center">
                         {isVerified === false && (
                             <>
-                                <div class="flex flex-col text-center w-full mb-12">
-                                    <h1 class="sm:text-3xl text-2xl font-medium title-font mb-4 text-gray-900">
+                                <div className="flex flex-col text-center w-full mb-12">
+                                    <h1 className="sm:text-3xl text-2xl font-medium title-font mb-4 text-gray-900">
                                         Invalid NS.ID. Please check again.
                                     </h1>
                                 </div>
@@ -158,13 +158,13 @@ export const ProofView = () => {
                         )}
                         {isVerified === true && proofData !== null && (
                             <>
-                                <div class="flex flex-col text-center w-full mb-12">
-                                    <h1 class="sm:text-3xl text-2xl font-medium title-font mb-4 text-gray-900">
+                                <div className="flex flex-col text-center w-full mb-12">
+                                    <h1 className="sm:text-3xl text-2xl font-medium title-font mb-4 text-gray-900">
                                         Credentials of {nsid} ID
                                     </h1>
                                 </div>
-                                <div class="flex-col text-center mb-12">
-                                    <button class="inline-flex text-white bg-purple-500 border-0 py-2 px-6 focus:outline-none hover:bg-purple-600 rounded text-lg" onClick={handleShare}>
+                                <div className="flex-col text-center mb-12">
+                                    <button className="inline-flex text-white bg-purple-500 border-0 py-2 px-6 focus:outline-none hover:bg-purple-600 rounded text-lg" onClick={handleShare}>
                                         {/* <Button colorScheme='purple' size='lg' onClick={handleShare}> */}
                                         Copy Profile Link
                                     </button>

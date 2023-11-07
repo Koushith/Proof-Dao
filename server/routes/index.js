@@ -12,6 +12,7 @@ const reclaim = new reclaimprotocol.Reclaim();
 
 router.get("/", (request, response) => {
   response.status(200).json({
+    message:"This route works!!",
     success: true,
     timestamp: new Date().toISOString(),
     uptime: process.uptime(),
@@ -45,19 +46,39 @@ router.get("/fetch/:nsId", async (req, res) => {
 });
 
 router.get("/create/:nsId", async (req, res) => {
+  // try {
+  //   const nsId = req.params.nsId;
+  //   console.log("create route was called", nsId)
+  //   const nsIdConfig = await ProofDao.findOne({ nsId: nsId });
+  //   console.log("found??", nsIdConfig)
+  //   if (nsIdConfig) {
+  //     return res.status(401).json({ message: "Given Network State Id already exists." });
+  //   }
+  //   const newNsIdConfig = await new ProofDao();
+  //   newNsIdConfig.nsId = nsId;
+  //   await newNsIdConfig.save();
+  //   res.status(200).json({ message: "Network State Id has been created." });
+  // } catch (err) {
+  //   console.log(err);
+  // }
+
   try {
     const nsId = req.params.nsId;
+    console.log("create route was called", nsId)
     const nsIdConfig = await ProofDao.findOne({ nsId: nsId });
+    console.log("found??", nsIdConfig)
     if (nsIdConfig) {
-      return res.status(401).json({ message: "Given Network State Id already exists." });
+      return res.status(400).json({ message: "Given Network State Id already exists." });
     }
-    const newNsIdConfig = await new NSID();
+    const newNsIdConfig = new ProofDao();
     newNsIdConfig.nsId = nsId;
     await newNsIdConfig.save();
     res.status(200).json({ message: "Network State Id has been created." });
   } catch (err) {
-    console.log(err);
+    console.error(err);
+    res.status(500).json({ message: "Internal server error" , error:err});
   }
+
 });
 
 // Request Reclaim URL for a proof request
@@ -78,6 +99,7 @@ const createObj = async () => {
 router.post("/reclaim-url", async (req, res) => {
   try {
     const providers = req.body.provider;
+    console.log("providers---", providers)
     const nsId = req.body.nsId;
     const nsIdConfig = await ProofDao.findOne({ nsId: nsId });
     if (!nsIdConfig) {
@@ -139,42 +161,42 @@ router.post("/update/proof", async (req, res) => {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Network State ID</title>
+    <title>Proof DAO</title>
     <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
 </head>
 
 <body>
-    <div class="container">
-        <header class="bg-light border mb-3 p-3">
-            <div class="container d-flex justify-content-between align-items-center">
-                <a class="d-flex align-items-center text-decoration-none" href="#">
+    <div className="container">
+        <header className="bg-light border mb-3 p-3">
+            <div className="container d-flex justify-content-between align-items-center">
+                <a className="d-flex align-items-center text-decoration-none" href="#">
                     <img src="https://assets.website-files.com/63f580596efa74629ceecdf5/646cd0d4bff811689094709c_Reclaim-Logo-Asterisk.jpg"
-                        alt="Logo" class="rounded-circle" width="50" height="50">
-                    <span class="ml-3 font-weight-bold text-xl">Network State ID</span>
+                        alt="Logo" className="rounded-circle" width="50" height="50">
+                    <span className="ml-3 font-weight-bold text-xl">Proof DAO</span>
                 </a>
                 <a href="https://www.reclaimprotocol.org/">
-                    <button class="btn btn-light">
+                    <button className="btn btn-light">
                         🔗 Reclaim Protocol
                     </button>
                 </a>
             </div>
         </header>
 
-        <section class="text-gray-600 body-font">
-            <div class="container px-5 py-24 mx-auto">
+        <section className="text-gray-600 body-font">
+            <div className="container px-5 py-24 mx-auto">
 
                 <!-- Credentials of NS.ID -->
-                <div class="flex flex-col text-center w-full mb-12">
-                    <h3 class="text-2xl font-medium title-font mb-4 text-gray-900">
+                <div className="flex flex-col text-center w-full mb-12">
+                    <h3 className="text-2xl font-medium title-font mb-4 text-gray-900">
                         Your Psuedonymous Profile is ready!
                     </h3>
                 </div>
 
                 <!-- Proof data -->
-                <div class="flex flex-col text-center w-full mb-12">
-                    <div class="flex justify-center">
+                <div className="flex flex-col text-center w-full mb-12">
+                    <div className="flex justify-center">
                         <button onclick="copyToClipboard('${url}')"
-                            class="btn btn-primary inline-flex text-white bg-purple-500 border-0 py-2 px-6 focus:outline-none hover:bg-purple-600 rounded text-lg">
+                            className="btn btn-primary inline-flex text-white bg-purple-500 border-0 py-2 px-6 focus:outline-none hover:bg-purple-600 rounded text-lg">
                             Copy Profile link
                         </button>
                     </div>
@@ -217,7 +239,7 @@ router.post("/update/proof", async (req, res) => {
     <script>
         function toggleCollapse(index) {
             const card = document.querySelectorAll('.card')[index];
-            card.querySelector('.collapse').classList.toggle('show');
+            card.querySelector('.collapse').classNameList.toggle('show');
         }
     </script>
 
