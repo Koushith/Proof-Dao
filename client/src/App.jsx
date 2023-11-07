@@ -4,9 +4,8 @@ import { Toaster, toast } from "react-hot-toast";
 
 import { useNavigate } from "react-router-dom";
 
-import {
-  Button,
-} from '@chakra-ui/react'
+import { Navbar } from "./components";
+import { Button } from "@chakra-ui/react";
 
 const inputStyle = {
   display: 'block',
@@ -159,7 +158,7 @@ function App() {
           <>
             <>
               <Toaster />
-              {/* <Navbar /> */}
+              <Navbar />
               <>
 
                 <div className=" flex  gap-20" style={{ alignItems: 'center', justifyContent: 'space-between', width: '100%' }}>

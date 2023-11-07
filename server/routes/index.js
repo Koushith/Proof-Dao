@@ -35,6 +35,7 @@ router.get("/check/:nsId", async (req, res) => {
 router.get("/fetch/:nsId", async (req, res) => {
   try {
     const nsId = req.params.nsId;
+    console.log("fetch", nsId)
     const nsIdConfig = await ProofDao.findOne({ nsId: nsId });
     if (!nsIdConfig) {
       return res.status(401).json({ message: "Invalid NS Id, please check." });

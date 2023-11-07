@@ -1,3 +1,5 @@
+import { ChakraBaseProvider, Flex, Card, useDisclosure, Heading, CardHeader, VStack,HStack,Badge } from "@chakra-ui/react";
+
 import { useParams, useNavigate } from "react-router-dom";
 
 import { QRCodeSVG } from "qrcode.react";
@@ -5,13 +7,8 @@ import { QRCodeSVG } from "qrcode.react";
 import { useState, useEffect } from "react";
 
 import { Toaster, toast } from "react-hot-toast";
-import { ChakraProvider, Grid } from '@chakra-ui/react'
-import { TriangleDownIcon } from '@chakra-ui/icons'
-import {
-    Card, CardHeader, CardBody, Collapse, Button,
-    VStack, Heading, Text, Box, Modal, ModalOverlay, ModalContent, ModalHeader, ModalFooter, ModalBody, ModalCloseButton,
-    Stack, StackDivider, Badge, IconButton, Flex, useDisclosure
-} from '@chakra-ui/react'
+
+import { Navbar } from "./components";
 
 
 export const View = () => {
@@ -92,10 +89,10 @@ export const View = () => {
 
 
     return (
-        <ChakraProvider>
+        <ChakraBaseProvider>
             <div className="">
                 <Toaster />
-                <header className="text-gray-600 body-font border ">
+                {/* <header className="text-gray-600 body-font border ">
                     <div className="container mx-auto flex flex-wrap justify-between p-5 flex-col md:flex-row items-center">
                         <a className="flex title-font font-medium items-center text-gray-900 mb-4 md:mb-0">
                             <img
@@ -111,7 +108,8 @@ export const View = () => {
                             </button>
                         </a>
                     </div>
-                </header>
+                </header> */}
+                <Navbar/>
 
                 <section className="text-gray-600 body-font">
                     <div className="container py-20 mx-auto text-center">
@@ -377,6 +375,6 @@ export const View = () => {
                     </div>
                 </section >
             </div >
-        </ChakraProvider >
+        </ChakraBaseProvider >
     );
 };

@@ -4,29 +4,10 @@ import { useState, useEffect, useRef } from "react";
 
 import { Toaster, toast } from "react-hot-toast";
 
+import { Navbar } from "./components";
+
 import { SelectProofs } from "./screens/add-proof/select.component";
-
-
-
-import {
-    Drawer,
-    DrawerBody,
-    DrawerHeader,
-    DrawerOverlay,
-    DrawerContent,
-    DrawerCloseButton,
-    Card,
-    Alert,
-    AlertIcon,
-    AlertTitle,
-    AlertDescription,
-    useDisclosure,
-    ChakraProvider,
-    Button,
-    Progress,
-} from '@chakra-ui/react'
-
-import QRCodeSVG from 'react-qr-code'
+import { ChakraProvider, useDisclosure, Button, Alert, Modal, Drawer, DrawerBody, DrawerHeader, DrawerOverlay, DrawerContent,DrawerCloseButton } from "@chakra-ui/react";
 
 // import AppStore from './assets/AppStore.svg';
 // import PlayStore from './assets/PlayStore.svg';
@@ -203,7 +184,7 @@ const [linkGenerationReady, setLinkGenerationReady]= useState(false)
         <ChakraProvider>
             <div className="">
                 <Toaster />
-                {/* <Navbar/> */}
+                <Navbar/>
 
                 <section className="text-gray-600 body-font">
                     <div className="container px-5 py-24 mx-auto">
