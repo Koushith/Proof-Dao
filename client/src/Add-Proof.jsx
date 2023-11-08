@@ -337,7 +337,7 @@ console.log("ycCheck", ycCheck)
                                 </div>
 
                             </div>}
-                            {!claimUrl && <Button onClick={postData} mt={4} colorScheme="blue">Submit</Button> }
+                            {!claimUrl && <Button onClick={postData} mt={4} colorScheme="blue" isLoading={isLoading}>Submit</Button> }
                             
                            
 
