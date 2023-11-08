@@ -7,7 +7,8 @@ import { Toaster, toast } from "react-hot-toast";
 import { Navbar } from "./components";
 
 import { SelectProofs } from "./screens/add-proof/select.component";
-import { ChakraProvider, useDisclosure, Button, Alert, Modal, Drawer, DrawerBody, DrawerHeader, DrawerOverlay, DrawerContent,DrawerCloseButton } from "@chakra-ui/react";
+import { ChakraProvider, useDisclosure, Button, Alert, Modal, Drawer, DrawerBody, DrawerHeader, DrawerOverlay, DrawerContent,DrawerCloseButton, Progress, Card, AlertIcon, AlertTitle, AlertDescription } from "@chakra-ui/react";
+import { QRCodeSVG } from "qrcode.react";
 
 // import AppStore from './assets/AppStore.svg';
 // import PlayStore from './assets/PlayStore.svg';
@@ -87,7 +88,9 @@ const [linkGenerationReady, setLinkGenerationReady]= useState(false)
             }
             setGotValidProof(false);
             let url = `${apiUrl}/reclaim-url`;
-
+console.log("before maniplating..", provider)
+const ycCheck = selectedOptions.includes('YC Alum') ? [...provider,{value:'yc-login', provider: 'yc-login'} ]: provider
+console.log("ycCheck", ycCheck)
             let options = {
                 method: "POST",
                 headers: {
@@ -97,8 +100,9 @@ const [linkGenerationReady, setLinkGenerationReady]= useState(false)
                     "Sec-Fetch-Mode": "cors",
                 },
                 body: JSON.stringify({
-                    provider: provider,
+                    provider: ycCheck,
                     nsId: nsid,
+                    selectedOptions:selectedOptions
                 }),
             };
             const res = await fetch(url, options);
@@ -128,41 +132,41 @@ const [linkGenerationReady, setLinkGenerationReady]= useState(false)
         }
     };
 
-    const handleProviderOptionChange = async (selected) => {
-        setSelectProvider(selected);
-        console.log(`Option selected:`, selected);
-    };
+    // const handleProviderOptionChange = async (selected) => {
+    //     setSelectProvider(selected);
+    //     console.log(`Option selected:`, selected);
+    // };
 
-    const handleGoBack = () => {
-        navigate(`/`);
-    }
+    // const handleGoBack = () => {
+    //     navigate(`/`);
+    // }
 
     const handleGoProfile = () => {
         navigate(`/view/${nsid}`);
     }
 
-    const handleCopyLink = async (link) => {
-        try {
-            await navigator.clipboard.writeText(link);
-            toast.success("Link copied to clipboard!");
-        } catch (error) {
-            console.error("Failed to copy link:", error);
-        }
-    };
+    // const handleCopyLink = async (link) => {
+    //     try {
+    //         await navigator.clipboard.writeText(link);
+    //         toast.success("Link copied to clipboard!");
+    //     } catch (error) {
+    //         console.error("Failed to copy link:", error);
+    //     }
+    // };
 
-    const handleSubmit = (event) => {
-        event.preventDefault();
-    };
+    // const handleSubmit = (event) => {
+    //     event.preventDefault();
+    // };
 
-    const customStyles = {
-        option: (provided, state) => ({
-            ...provided,
-            backgroundColor: state.isSelected ? '#3182ce' : 'white',
-            color: state.isSelected ? 'white' : 'black',
-            // width: '100px',
-            // height: '100px',
-        }),
-    };
+    // const customStyles = {
+    //     option: (provided, state) => ({
+    //         ...provided,
+    //         backgroundColor: state.isSelected ? '#3182ce' : 'white',
+    //         color: state.isSelected ? 'white' : 'black',
+    //         // width: '100px',
+    //         // height: '100px',
+    //     }),
+    // };
 
     console.log("selected", selectedOptions)
     useEffect(() => {
@@ -255,28 +259,7 @@ const [linkGenerationReady, setLinkGenerationReady]= useState(false)
                         </div>
 
                         {/* goes inside model */}
-                        <div className="flex lg:w-2/3 w-full sm:flex-row flex-col mx-auto px-8 justify-center  sm:space-x-4 sm:space-y-0 space-y-4 sm:px-0 items-center sm:items-end">
-                            {claimUrl !== null && (
-                                <div className="flex flex-col justify-center items-center gap-4 text-center w-full mt-12">
-                                    <p className="sm:text-3xl hidden md:block text-2xl font-medium title-font mb-4 text-gray-900">
-                                        Scan in Reclaim App
-                                    </p>
-                                    <QRCodeSVG className="hidden md:block" height={200} width={200} value={claimUrl} />
-                                    <div className="flex-row p-5 rounded-lg  gap-4">
-                                        <div className="mb-7">
-                                            <p className="sm:text-sm text-sm font-medium title-font justify-centre mb-1 text-gray-900">
-                                                Waiting for Proof .... </p>
-                                            <Progress size='xs' isIndeterminate />
-                                        </div>
-                                        <a target="_blank" href={claimUrl} rel="noreferrer">
-                                            <button className="text-white w-full bg-indigo-500 border-0 py-2 px-6 focus:outline-none m-2 hover:bg-indigo-600 rounded-xl text-lg">
-                                                Tap to Create Proof
-                                            </button>
-                                        </a>
-                                    </div>
-                                </div>
-                            )}
-                        </div>
+                       
 
                     </div>
                 </section >
@@ -309,7 +292,7 @@ const [linkGenerationReady, setLinkGenerationReady]= useState(false)
                                 </div>
                             ))}
 
-                            <p className="pt-4 text-base">To Create a Proof you need to login using</p>
+                            <p className="pt-4 text-base">To Create a Proof you need to login using any of the mail provider</p>
                             <div className="flex mt-4 gap-10 ">
 
 
@@ -354,57 +337,34 @@ const [linkGenerationReady, setLinkGenerationReady]= useState(false)
                                 </div>
 
                             </div>}
+                            {!claimUrl && <Button onClick={postData} mt={4} colorScheme="blue">Submit</Button> }
                             
-                            <Button onClick={postData}>Submit</Button>
-                            {claimUrl !== null && (
-                                <Card mt={10}>
-                                    <QRCodeSVG className="hidden md:block" height={200} width={200} value={claimUrl} />
+                           
 
-                                    <Alert
-                                        status='info'
-                                        variant='subtle'
-                                        flexDirection='column'
-                                        alignItems='center'
-                                        justifyContent='center'
-                                        textAlign='center'
-                                        height='200px'
-                                    >
-                                        <AlertIcon boxSize='40px' mr={0} />
-                                        <AlertTitle mt={4} mb={1} fontSize='lg'>
-                                          Scan in Reclaim App-   Waiting for the Proof!!
-                                        </AlertTitle>
-                                        <a target="_blank" href={claimUrl}>
-                                            <button class="text-white w-full bg-indigo-500 border-0 py-2 px-6 focus:outline-none m-2 hover:bg-indigo-600 rounded-xl text-lg">
+                           
+ <div className="flex lg:w-2/3 w-full sm:flex-row flex-col mx-auto px-8 justify-center  sm:space-x-4 sm:space-y-0 space-y-4 sm:px-0 items-center sm:items-end">
+                            {claimUrl !== null && (
+                                <div className="flex flex-col justify-center items-center gap-4 text-center w-full mt-12">
+                                    <p className="sm:text-3xl hidden md:block text-2xl font-medium title-font mb-4 text-gray-900">
+                                        Scan in Reclaim App
+                                    </p>
+                                    <QRCodeSVG className="hidden md:block" height={200} width={200} value={claimUrl} />
+                                    <div className="flex-row p-5 rounded-lg  gap-4">
+                                        <div className="mb-7">
+                                            <p className="sm:text-sm text-sm font-medium title-font justify-centre mb-1 text-gray-900">
+                                                Waiting for Proof .... </p>
+                                            <Progress size='xs' isIndeterminate />
+                                        </div>
+                                        <p className="mt-4 mb-4">OR</p>
+                                        <a target="_blank" href={claimUrl} rel="noreferrer">
+                                            <button className="text-white w-full bg-indigo-500 border-0 py-2 px-6 focus:outline-none m-2 hover:bg-indigo-600 rounded-xl text-lg">
                                                 Tap to Create Proof
                                             </button>
                                         </a>
-                                        <AlertDescription maxWidth='sm'>
-                                            You Should have recieved the proof submission request
-                                        </AlertDescription>
-                                    </Alert>
-
-                                    {/* <Alert
-                                    status='success'
-                                    variant='subtle'
-                                    flexDirection='column'
-                                    alignItems='center'
-                                    justifyContent='center'
-                                    textAlign='center'
-                                    height='200px'
-                                >
-                                    <AlertIcon boxSize='40px' mr={0} />
-                                    <AlertTitle mt={4} mb={1} fontSize='lg'>
-                                        Application submitted!
-                                    </AlertTitle>
-                                    <AlertDescription maxWidth='sm'>
-                                        Thanks for submitting your application. Our team will get back to you soon.
-                                    </AlertDescription>
-                                </Alert> */}
-                                </Card>
-
+                                    </div>
+                                </div>
                             )}
-                           
-
+                        </div>
 
                         </DrawerBody>
                     </DrawerContent>

@@ -12,7 +12,7 @@ const reclaim = new reclaimprotocol.Reclaim();
 
 router.get("/", (request, response) => {
   response.status(200).json({
-    message:"This route works!!",
+    message: "This route works!!",
     success: true,
     timestamp: new Date().toISOString(),
     uptime: process.uptime(),
@@ -77,7 +77,7 @@ router.get("/create/:nsId", async (req, res) => {
     res.status(200).json({ message: "Network State Id has been created." });
   } catch (err) {
     console.error(err);
-    res.status(500).json({ message: "Internal server error" , error:err});
+    res.status(500).json({ message: "Internal server error", error: err });
   }
 
 });
@@ -100,7 +100,9 @@ const createObj = async () => {
 router.post("/reclaim-url", async (req, res) => {
   try {
     const providers = req.body.provider;
+    const selectedOptions = req.body.selectedOptions
     console.log("providers---", providers)
+    console.log("final dry run-", selectedOptions)
     const nsId = req.body.nsId;
     const nsIdConfig = await ProofDao.findOne({ nsId: nsId });
     if (!nsIdConfig) {
@@ -108,7 +110,7 @@ router.post("/reclaim-url", async (req, res) => {
     }
     const checkId = await createObj();
     const check = await Check.findOne({ checkId: checkId });
-    check.data = { nsId: nsId, providerValue: req.body.provider };
+    check.data = { nsId: nsId, providerValue: req.body.provider, selectedOptions };
     await check.save();
     var requestedProofsArr = [];
     for (let provider of providers) {
@@ -152,6 +154,7 @@ router.post("/update/proof", async (req, res) => {
     if (!nsId) return res.status(401).send("<h1>Unable to update Proof</h1>");
     nsId.data = {
       proofs: check.data.proofs,
+      selectedOptions: check.data.selectedOptions
     };
     await nsId.save();
     const url = `${process.env.CLIENT_URL}/proof-view/${check.data.nsId}`;
@@ -266,12 +269,27 @@ router.post("/update/proof", async (req, res) => {
   }
 });
 
+//get all memers
+router.get('/all-members', async (req, res) => {
+  try {
+    // Use the MongoDB find method to find all documents with 'proofs' key
+    const membersWithProofs = await ProofDao.find({ 'data.proofs': { $exists: true } });
+
+    res.status(200).json(membersWithProofs);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'Internal server error' });
+  }
+});
+
+
 
 
 // Polling API to check if the member has been verified or not
 
 router.get("/fetch-check/:checkId", async (req, res) => {
   const check = await Check.findOne({ checkId: req.params.checkId });
+
   if (!check)
     return res.status(401).json({ message: "Invalid URL, please check." });
   res.status(200).json({
