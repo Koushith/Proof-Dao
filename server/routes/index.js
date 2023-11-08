@@ -69,12 +69,12 @@ router.get("/create/:nsId", async (req, res) => {
     const nsIdConfig = await ProofDao.findOne({ nsId: nsId });
     console.log("found??", nsIdConfig)
     if (nsIdConfig) {
-      return res.status(400).json({ message: "Given Network State Id already exists." });
+      return res.status(400).json({ message: "Given  Id already exists." });
     }
     const newNsIdConfig = new ProofDao();
     newNsIdConfig.nsId = nsId;
     await newNsIdConfig.save();
-    res.status(200).json({ message: "Network State Id has been created." });
+    res.status(200).json({ message: "New Id has been created." });
   } catch (err) {
     console.error(err);
     res.status(500).json({ message: "Internal server error", error: err });
