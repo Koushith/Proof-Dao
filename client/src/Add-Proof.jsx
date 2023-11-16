@@ -10,20 +10,6 @@ import { SelectProofs } from "./screens/add-proof/select.component";
 import { ChakraProvider, useDisclosure, Button, Alert, Modal, Drawer, DrawerBody, DrawerHeader, DrawerOverlay, DrawerContent,DrawerCloseButton, Progress, Card, AlertIcon, AlertTitle, AlertDescription } from "@chakra-ui/react";
 import { QRCodeSVG } from "qrcode.react";
 
-// import AppStore from './assets/AppStore.svg';
-// import PlayStore from './assets/PlayStore.svg';
-
-// export const AddProof = () => {
-//     const callBackUrl = process.env.REACT_APP_API_URL + '/proofs';
-//     console.log(callBackUrl);
-//     return (
-//         <ChakraProvider>
-//             <Flex alignItems='center' justifyContent='center' w='100%' h='100vh'>
-//                 <ImportReclaimProofs label='Import from Reclaim' webHook={callBackUrl} isProofsReceived={true} />
-//             </Flex>
-//         </ChakraProvider>
-//     );
-// }
 
 export const AddProof = () => {
     const apiUrl = process.env.REACT_APP_API_URL;
@@ -47,6 +33,7 @@ export const AddProof = () => {
         { value: '1', label: 'Works at Big4 consulting Firms' },
         { value: '2', label: 'Works at FAANG' },
         { value: 'yc-login', label: 'YC Alum' },
+        {value:'carta-esops', label: 'Owns ESPOS from Top Companies - CARTA'}
 
     ];
 
@@ -132,41 +119,12 @@ console.log("ycCheck", ycCheck)
         }
     };
 
-    // const handleProviderOptionChange = async (selected) => {
-    //     setSelectProvider(selected);
-    //     console.log(`Option selected:`, selected);
-    // };
-
-    // const handleGoBack = () => {
-    //     navigate(`/`);
-    // }
-
+  
     const handleGoProfile = () => {
         navigate(`/view/${nsid}`);
     }
 
-    // const handleCopyLink = async (link) => {
-    //     try {
-    //         await navigator.clipboard.writeText(link);
-    //         toast.success("Link copied to clipboard!");
-    //     } catch (error) {
-    //         console.error("Failed to copy link:", error);
-    //     }
-    // };
-
-    // const handleSubmit = (event) => {
-    //     event.preventDefault();
-    // };
-
-    // const customStyles = {
-    //     option: (provided, state) => ({
-    //         ...provided,
-    //         backgroundColor: state.isSelected ? '#3182ce' : 'white',
-    //         color: state.isSelected ? 'white' : 'black',
-    //         // width: '100px',
-    //         // height: '100px',
-    //     }),
-    // };
+ 
 
     console.log("selected", selectedOptions)
     useEffect(() => {
@@ -317,9 +275,14 @@ console.log("ycCheck", ycCheck)
 
 
                             </div>
+  <p className="mt-6 mb-6"> And</p>
+
+
+  <div className="flex justify-start">
+
 
                             {selectedOptions.includes('YC Alum') && <div>
-                                <p className="mt-6 mb-6"> And</p>
+                              
                                 <div
                                     className="flex items-center justify-center flex-col "
 
@@ -337,6 +300,27 @@ console.log("ycCheck", ycCheck)
                                 </div>
 
                             </div>}
+
+                                         {selectedOptions.includes('Owns ESPOS from Top Companies - CARTA') && <div>
+                              
+                                <div
+                                    className="flex items-center justify-center flex-col "
+
+                                    style={{
+                                        borderRadius: '4px',
+                                        padding: '20px',
+                                        border: '1px solid rgba(4, 69, 175, 0.8)',
+                                        width: 'fit-content',
+                                        margin: '4px',
+                                        cursor: 'pointer',
+                                    }}
+                                >
+                                    <img src="https://images.crunchbase.com/image/upload/c_lpad,h_256,w_256,f_auto,q_auto:eco,dpr_1/wypw7nnrsebjl8k2eljh" alt="logo" style={{ width: '100px', height: '100px', objectFit: 'contain' }} />
+                                    <p className="text-center mt-2 font-semibold">CARTA - ESOPS</p>
+                                </div>
+
+                            </div>}
+                              </div>
                             {!claimUrl && <Button onClick={postData} mt={4} colorScheme="blue" isLoading={isLoading}>Submit</Button> }
                             
                            
