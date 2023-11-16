@@ -12,6 +12,7 @@ const View = () => {
         try {
             const res = await fetch(`${apiUrl}/fetch/${nsid}`);
             const data = await res.json();
+        
             setProofData(data.data);
         } catch (err) {
             console.log(err);
